@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <locale.h>
+#include <stdlib.h>
+
+// Функция для сортировки строки массива пузырьковым методом
+void line_sort_massive(int* arr, int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Функция для сортировки двумерного массива
+void sort_massive(int** mass, int m, int n) {
+    for (int i = 0; i < m; i++) {
+        line_sort_massive(mass[i], n);
+    }
+}
+
+// Функция создания двумерного массива
+void create_massive(int m, int n, int** mass) {
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            while (1){
+            printf("Введите значение для элемента [%d][%d]: ", i + 1, j + 1);
+            int y = scanf_s("%d", &mass[i][j]);
+            if (y != 1) {
+                printf("Вы ввели нечисловой коэффициент. Введите коэффициент ещё раз\n");
+                while (getchar() != '\n');
+            }
+            else {
+                break;
+            }
+            }
+        }
+    }
+}
+
+
+int data_check_line() {
+        int a;
+        while (1) {
+            printf("Введите количество строк (m): ");
+            int y = scanf_s("%d", &a);
+            if (y != 1 || a == 0) {
+                printf("Вы ввели нечисловой коэффициент. Введите коэффициент ещё раз\n");
+                // Очистка буфера ввода
+                while (getchar() != '\n');
+            }
+            else {
+                break;
+            }
+        }
+        return a;
+    }
+
+int data_check_column() {
+    int a;
+    while (1) {
+        printf("Введите количество столбцов (n): ");
+        int y = scanf_s("%d", &a);
+        if (y != 1 || a == 0) {
+            printf("Вы ввели нечисловой коэффициент. Введите коэффициент ещё раз\n");
+            // Очистка буфера ввода
+            while (getchar() != '\n');
+        }
+        else {
+            break;
+        }
+    }
+    return a;
+}
+
+int main() {
+    setlocale(LC_ALL, "Rus");
+
+    int m = data_check_line();
+    
+    int n = data_check_column();
+    
+    // Выделение памяти для двумерного массива
+    int** mass1 = (int**)malloc(m * sizeof(int*));
+    int** mass2 = (int**)malloc(m * sizeof(int*));
+    for (int i = 0; i < m; i++) {
+        mass1[i] = (int*)malloc(n * sizeof(int));
+        mass2[i] = (int*)malloc(n * sizeof(int));
+    }
+
+    create_massive(m, n, mass1);
+
+    // Копирование массива mass1 в mass2
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            mass2[i][j] = mass1[i][j];
+        }
+    }
+
+    sort_massive(mass2, m, n);
+    printf("\n");
+    printf("Введенный двумерный массив:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", mass1[i][j]);
+        }
+        printf("\n");
+    }
+
+    printf("\nПолученный двумерный массив:\n");
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", mass2[i][j]);
+        }
+        printf("\n");
+    }
+
+    for (int i = 0; i < m; i++) {
+        free(mass1[i]);
+        free(mass2[i]);
+    }
+    free(mass1);
+    free(mass2);
+
+    return 0;
+}
